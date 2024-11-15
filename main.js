@@ -70,11 +70,15 @@ const statGroups = {
 	},
 	"The Tiger": {
 		str: 0.6,
-		dex: 0.6,
+		agi: 0.6,
 	},
 	"The Bear": {
 		str: 0.6,
 		sta: 0.6,
+	},
+	rollGroup() {
+		const keys = Object.keys(this);
+		return keys[Math.floor(Math.random() * (keys.length - 1))];
 	},
 };
 
@@ -99,6 +103,19 @@ function genItem() {
 	//pick item type
 	droppedItem.type = randType();
 	//roll for rarity
+	droppedItem.rarity = rarities.rollRarity();
+	//roll for group
+	droppedItem.statGroup = statGroups.rollGroup();
+	//roll level
+	droppedItem.level = Math.floor(1 + Math.random() * 10);
+	//gen name
+	droppedItem.name = `${droppedItem.rarity} ${droppedItem.type} of ${droppedItem.statGroup}`;
+	//apply stats
+	const stats = statGroups[droppedItem.statGroup];
+	const statsKeys = Object.keys(statGroups[droppedItem.statGroup]);
+	statsKeys.forEach((stat) => {
+		droppedItem[stat] = stats[stat] * droppedItem.level * 10; //weird rounding MISSING RARITY
+	});
 }
 
 /*
@@ -138,4 +155,14 @@ console.log(
 */
 
 genItem();
-console.log(droppedItem);
+
+console.log(`Drop: Level ${droppedItem.level} ${droppedItem.name}`);
+if (droppedItem.str) console.log(`Strength: ${droppedItem.str}`);
+if (droppedItem.agi) console.log(`Agility: ${droppedItem.agi}`);
+if (droppedItem.sta) console.log(`Stamina: ${droppedItem.sta}`);
+if (droppedItem.int) console.log(`Intellect: ${droppedItem.int}`);
+if (droppedItem.ver) console.log(`Versatility: ${droppedItem.ver}`);
+// Agility: ${droppedItem.agi}
+//Stamina: ${droppedItem.sta}
+//Intellect: ${droppedItem.int}
+//Versatility: ${droppedItem.ver}
