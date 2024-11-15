@@ -1,5 +1,3 @@
-// simulate loot drops for a warrior
-
 // item type (determines stat options?)
 const itemTypes = [
 	"Sword",
@@ -11,8 +9,6 @@ const itemTypes = [
 ];
 
 // Level (determine stat weights)
-// Level 1:10 Stat
-// Level 2:20 Stat
 
 // rarity (determines stat options?/weights)
 const rarities = {
@@ -48,25 +44,22 @@ const rarities = {
 };
 
 // stat groups (stat:ratio)
-// Strength (Str:1)
-// The Tiger (Str:.6 Dex:.6)
-// The Bear (Str:.6 Sta:.6)
-// The Gorilla (Str:.6 Int:.6)
-// The Boar (Str:.6 Ver:.6)
-// Agility (Agi:1)
-// The Monkey (Agi:.6 Sta:.6)
-// The Falcon (Agi:.6 Int:.6)
-// The Wolf (Agi:.6 Ver:.6)
-// Stamina (Sta:1)
-// The Eagle (Sta:.6 Int:.6)
-// The Whale (Sta:.6 Ver:.6)
-// Intellect (Int:1)
-// The Owl (Int:.6 Ver:.6)
-// Versatility (Ver:1)
 
 const statGroups = {
 	Strength: {
 		str: 1,
+	},
+	Agility: {
+		agi: 1
+	},
+	Stamina: {
+		sta: 1
+	},
+	Intellect: {
+		int: 1
+	},
+	Versatility: {
+		ver: 1
 	},
 	"The Tiger": {
 		str: 0.6,
@@ -75,6 +68,38 @@ const statGroups = {
 	"The Bear": {
 		str: 0.6,
 		sta: 0.6,
+	},
+	"The Gorilla": {
+		str: 0.6,
+		int: 0.6
+	},
+	"The Boar": {
+		str: 0.6,
+		ver: 0.6
+	},
+	"The Monkey": {
+		agi: 0.6,
+		sta: 0.6
+	},
+	"The Falcon": {
+		agi: 0.6,
+		int: 0.6
+	},
+	"The Wolf": {
+		agi: 0.6,
+		ver: 0.6
+	},
+	"The Eagle": {
+		sta: 0.6,
+		int: 0.6
+	},
+	"The Whale": {
+		sta: 0.6,
+		ver: 0.6
+	},
+	"The Owl": {
+		int: 0.6,
+		ver: 0.6
 	},
 	rollGroup() {
 		const keys = Object.keys(this);
@@ -95,13 +120,9 @@ const droppedItem = {
 	ver: 0,
 };
 
-function randType() {
-	return itemTypes[Math.floor(Math.random() * itemTypes.length)];
-}
-
 function genItem() {
 	//pick item type
-	droppedItem.type = randType();
+	droppedItem.type = itemTypes[Math.floor(Math.random() * itemTypes.length)];
 	//roll for rarity
 	droppedItem.rarity = rarities.rollRarity();
 	//roll for group
@@ -114,7 +135,7 @@ function genItem() {
 	const stats = statGroups[droppedItem.statGroup];
 	const statsKeys = Object.keys(statGroups[droppedItem.statGroup]);
 	statsKeys.forEach((stat) => {
-		droppedItem[stat] = stats[stat] * droppedItem.level * 10; //weird rounding MISSING RARITY
+		droppedItem[stat] = Math.round(stats[stat] * ((droppedItem.level * 10) * rarities[droppedItem.rarity].multiplier));
 	});
 }
 
@@ -162,7 +183,4 @@ if (droppedItem.agi) console.log(`Agility: ${droppedItem.agi}`);
 if (droppedItem.sta) console.log(`Stamina: ${droppedItem.sta}`);
 if (droppedItem.int) console.log(`Intellect: ${droppedItem.int}`);
 if (droppedItem.ver) console.log(`Versatility: ${droppedItem.ver}`);
-// Agility: ${droppedItem.agi}
-//Stamina: ${droppedItem.sta}
-//Intellect: ${droppedItem.int}
-//Versatility: ${droppedItem.ver}
+
